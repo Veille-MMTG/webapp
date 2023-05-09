@@ -5,7 +5,7 @@ from pymongo import IndexModel, TEXT, ASCENDING
 
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb://localhost:27017/news_db"
+app.config["MONGO_URL"] = "mongodb://localhost:27017/news_db"
 mongo = PyMongo(app)
 
 

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Document List</h1>
+        <form action="/search" method="POST">
+            <input type="text" name="query" placeholder="Search documents...">
+            <button type="submit">Search</button>
+        </form>
+    </header>
+    <main>
+        <ul>
+            {% for document in documents %}
+                <li>
+                    <a href="{{ document.url }}">{{ document.title }}</a>
+                    <p>Quality: {{ document.quality }}</p>
+                    <p>Relevance: {{ document.relevance }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>

@@ -2,10 +2,10 @@ from flask import Flask, render_template, request
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from pymongo import IndexModel, TEXT, ASCENDING
-
+import os 
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb://localhost:27017/news_db"
+app.config["MONGO_URI"] = os.getenv("MONGO_URI")
 mongo = PyMongo(app)
 
 

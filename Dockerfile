@@ -1,41 +1,26 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11-alpine AS builder
+FROM python:3.11
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
 WORKDIR /app
 
-# Copy requirements.txt into the container
-COPY requirements.txt ./
+# Copy the application files to the container
+COPY . /app
 
-# Install any needed packages specified in requirements.txt
-RUN apk add --no-cache --virtual .build-deps \
-        gcc \
-        musl-dev \
-    && pip install --no-cache-dir -r requirements.txt \
-    && apk del .build-deps
+# Install the application dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Use a lightweight base image
-FROM python:3.11-alpine
+# Set the environment variables
+ENV FLASK_APP=app.py
+ENV FLASK_DEBUG=0
 
-# Set the working directory
-WORKDIR /app
-
-# Copy only the necessary files needed for production
-COPY app.py requirements.txt ./
-
-# Make port 80 available to the world outside this container
+# Expose the application port
 EXPOSE 80
 
-# Define environment variable
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-
-# Create a non-root user to run the application
-RUN adduser --disabled-password --gecos "" myuser
-USER myuser
-
-# Copy the installed packages from the builder image
-COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
-
-# Use Waitress to run the application
-CMD ["waitress-serve", "--port=80", "app:app"]
+# Start the application server using Gunicorn
+ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:80", "app:app"]

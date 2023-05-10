@@ -9,24 +9,24 @@ app.config["MONGO_URI"] = os.getenv("MONGO_URI")
 mongo = PyMongo(app)
 
 
-def init_mongo_collection():
-    # Get the database and collection
-    db = mongo.db
-    collection = db['articles']
+# def init_mongo_collection():
+#     # Get the database and collection
+#     db = mongo.db
+#     collection = db['articles']
 
-    # Create a unique index on the 'url' field
-    url_index = IndexModel([("url", ASCENDING)], unique=True)
+#     # Create a unique index on the 'url' field
+#     url_index = IndexModel([("url", ASCENDING)], unique=True)
 
-    # Create a compound text index on the 'title', 'text', 'summary', and 'keywords' fields
-    text_index = IndexModel([("title", TEXT), ("text", TEXT), ("summary", TEXT), ("keywords", TEXT)])
+#     # Create a compound text index on the 'title', 'text', 'summary', and 'keywords' fields
+#     text_index = IndexModel([("title", TEXT), ("text", TEXT), ("summary", TEXT), ("keywords", TEXT)])
 
-    # Create indexes
-    collection.create_indexes([url_index, text_index])
+#     # Create indexes
+#     collection.create_indexes([url_index, text_index])
 
-    return collection
+#     return collection
 
 
-collection = init_mongo_collection()
+collection = mongo.db.articles
 
 
 @app.route("/")

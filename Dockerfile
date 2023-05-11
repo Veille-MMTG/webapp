@@ -24,4 +24,4 @@ ENV FLASK_DEBUG=0
 EXPOSE 80
 
 # Start the application server using Gunicorn
-ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:\${PORT:-80}", "app:app"]
+ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:\${PORT}", "app:app"]

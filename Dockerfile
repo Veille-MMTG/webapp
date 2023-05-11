@@ -13,7 +13,8 @@ WORKDIR /app
 COPY . /app
 
 # Install the application dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir gunicorn
 
 # Set the environment variables
 ENV FLASK_APP=app.py

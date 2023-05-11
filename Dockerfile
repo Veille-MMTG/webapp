@@ -13,13 +13,12 @@ WORKDIR /app
 COPY . /app
 
 # Install the application dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt && \ 
+    chmod +x /app/start.sh
+
 # Set the environment variables
 ENV FLASK_APP=app.py
 ENV FLASK_DEBUG=0
 
-# Expose the application port
-EXPOSE ${PORT}
-
 # Start the application server using Gunicorn
-ENTRYPOINT gunicorn -b 0.0.0.0:\${PORT} app:app
+ENTRYPOINT ["/app/start.sh"]

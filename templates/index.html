@@ -1,29 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document List</title>
+    <title>Large Language Models</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='logo.jpg') }}">
 </head>
+
 <body>
     <header>
-        <h1>Document List</h1>
+        <h1>Large Language Models</h1>
         <form action="/search" method="POST">
             <input type="text" name="query" placeholder="Search documents...">
             <button type="submit">Search</button>
         </form>
+        <button id="dark-mode-toggle">Dark Mode</button>
     </header>
     <main>
-        <ul>
-            {% for document in documents %}
-                <li>
-                    <a href="{{ document.url }}">{{ document.title }}</a>
-                    <p>Quality: {{ document.quality }}</p>
-                    <p>Relevance: {{ document.relevance }}</p>
-                </li>
-            {% endfor %}
-        </ul>
+        {% for document in documents %}
+        <div class="document-item">
+            <div class="rank-number">{{ loop.index }}</div>
+            <a href="{{ document.url }}">{{ document.title }}</a>
+            <p class="published-date">Published: {{ document.published_date }}</p>
+            <p class="score-quality">Quality: {{ document.quality }}</p>
+            <p class="score-relevance">Relevance: {{ document.relevance }}</p>
+        </div>
+        {% endfor %}
     </main>
+    <script>
+        // Get the Dark Mode button element
+        let darkModeToggle = document.getElementById('dark-mode-toggle');
+
+        // Add a click event listener
+        darkModeToggle.addEventListener('click', function () {
+            // Toggle the "dark-mode" class
+            document.body.classList.toggle('dark-mode');
+        });
+
+        function formatDate(dateStr) {
+            let dateObj = new Date(dateStr);
+
+            let options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            };
+
+            let formattedDate = new Intl.DateTimeFormat('en-US', options).format(dateObj);
+
+            return formattedDate;
+        }
+
+        // Select all the date elements
+        let dateElements = document.querySelectorAll('.published-date');
+
+        // Format each date
+        dateElements.forEach((element) => {
+            // Extract the date string
+            let dateStr = element.textContent.split(': ')[1];
+
+            // Format the date
+            let formattedDate = formatDate(dateStr);
+
+            // Update the element text
+            element.textContent = 'Published: ' + formattedDate;
+        });
+
+        // Select all the score elements
+        let qualityScoreElements = document.querySelectorAll('.score-quality');
+        let relevanceScoreElements = document.querySelectorAll('.score-relevance');
+
+        // Function to round the score
+        function roundScore(scoreStr) {
+            // Extract the score
+            let score = parseFloat(scoreStr);
+
+            // Round to 2 decimal places
+            let roundedScore = score.toFixed(2);
+
+            return roundedScore;
+        }
+
+        // Round each score
+        qualityScoreElements.forEach((element) => {
+            // Extract the score string
+            let scoreStr = element.textContent.split(': ')[1];
+
+            // Round the score
+            let roundedScore = roundScore(scoreStr);
+
+            // Update the element text
+            element.textContent = 'Quality: ' + roundedScore;
+        });
+
+        relevanceScoreElements.forEach((element) => {
+            // Extract the score string
+            let scoreStr = element.textContent.split(': ')[1];
+
+            // Round the score
+            let roundedScore = roundScore(scoreStr);
+
+            // Update the element text
+            element.textContent = 'Relevance: ' + roundedScore;
+        });
+
+    </script>
+
 </body>
+
 </html>

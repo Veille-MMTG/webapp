@@ -3,6 +3,7 @@ from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from pymongo import IndexModel, TEXT, ASCENDING
 import os
+from datetime import datetime
 import dotenv
 dotenv.load_dotenv()
 
@@ -35,12 +36,12 @@ def index():
     documents = collection.find().sort("quality", -1)
     return render_template("index.html", documents=documents)
 
-
 @app.route("/search", methods=["POST"])
 def search():
     query = request.form.get("query")
     documents = collection.find({"$text": {"$search": query}}).sort("quality", -1)
     return render_template("index.html", documents=documents)
+
 
 
 if __name__ == "__main__":

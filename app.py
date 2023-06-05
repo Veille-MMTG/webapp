@@ -28,7 +28,7 @@ def init_mongo_collection(db_name, collection_name):
 
     return collection
 
-collection = init_mongo_collection('news_db', 'articles')
+collection = init_mongo_collection('news_db', 'articlesv2')
 
 
 @app.route("/")
